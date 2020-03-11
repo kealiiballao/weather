@@ -14,14 +14,14 @@ app.get("/", function(req, res) {
 //invoked after hitting go in the html form
 app.post("/", function(req, res) {
 
-    // takes in the city from the html form, display in // console. Takes in as string
+    // takes in the city from the html form, display in console. Takes in as String
         const city = String(req.body.cityInput);
         console.log(req.body.cityInput);
 
-    //build up the URL for the JSON query, API Key is // secret and needs to be obtained by signup
+    //build up the URL for the JSON query, API Key is e2a23207324a3ca9e15f4b78edef5b69 secret and needs to be obtained by signup
         const units = "imperial";
         const apiKey = "e2a23207324a3ca9e15f4b78edef5b69";//secret key created on openweathermap
-        const url = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + city +  "&units=" + units + "&APPID=" + apiKey; //url needed to query by city. See openweathermap city section
+        const url = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + city +  "&units=" + units + "&APPID=" + apiKey; //url needed to query by city. See openweathermap city section.
 
     // this gets the data from Open WeatherPI
     https.get(url, function(response){
@@ -32,21 +32,21 @@ app.post("/", function(req, res) {
             const temp = weatherData.main.temp;
             const feelsLike = weatherData.main.feels_like;
             const city = weatherData.name;
+            const zipCode = weatherData.zip;
             const weatherDescription = weatherData.weather[0].description;
             const icon = weatherData.weather[0].icon;
             const imageURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
             // displays the output of the results
-            res.write("<h1> The weather is " + weatherDescription + "<h1>");
-            res.write("<h2>The Temperature in " + city + " is " + temp + " Degrees Fahrenheit<h2>");//took out zip variable because not needed.
-            res.write("<img src=" + imageURL +">");
-            res.write("Feels like: "+ feelsLike);       
-            res.send();
+            res.write("<h1> The weather is " + weatherDescription + "</h1>");
+            res.write("<p>The Temperature in " + city +" is " + temp + "&#8457; </p>");//took out zip variable because not needed.
+            res.write("<div><img src=" + imageURL +">"+"Feels like: "+ feelsLike+"</div>");
+            res.send();//need to send data to webpage.
         });
     });
 })
 
 
 //Code will run on 3000 or any available open port
-app.listen(process.env.PORT || 3000, function() {
-console.log ("Server is running on port")
+app.listen(process.env.PORT || 3003, function() {
+console.log ("Server is running on port 3003")
 });
