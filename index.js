@@ -15,24 +15,34 @@ app.get("/", function(req, res) {
 app.post("/", function(req, res) {
 
     // takes in the city from the html form, display in console. Takes in as String
-        const city = String(req.body.cityInput);
-        console.log(req.body.cityInput);
+        const coordLong =parseFloat(req.body.longitude);
+        const coordLat = parseFloat(req.body.latitude);
+        console.log(coordLong +", "+coordLat);
 
     //build up the URL for the JSON query, API Key is e2a23207324a3ca9e15f4b78edef5b69 secret and needs to be obtained by signup
         const units = "imperial";
         const apiKey = "e2a23207324a3ca9e15f4b78edef5b69";//secret key created on openweathermap
-        const url = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + city +  "&units=" + units + "&APPID=" + apiKey; //url needed to query by city. See openweathermap city section.
+        const url = "https://api.openweathermap.org/data/2.5/weather" + "?lat=" + coordLat +"&lon=" + coordLong +  "&units=" + units + "&APPID=" + apiKey; //url needed to query by city. See openweathermap city section.
 
     // this gets the data from Open WeatherPI
     https.get(url, function(response){
-        console.log(response.statusCode);
         // gets individual items from Open Weather API
         response.on("data", function(data){
             const weatherData = JSON.parse(data);
-            const temp = weatherData.main.temp;
+            const tempMin = weatherData.main.temp_min;
+            const tempMax = weatherData.main.temp_max;
+            const windSpeed = weatherData.wind.speed;
+            const windDirection = weatherData.wind.deg;
             const feelsLike = weatherData.main.feels_like;
-            const city = weatherData.name;
-            const zipCode = weatherData.zip;
+           const city = weatherData.name;
+           let myWeatherTestArray = [city,tempMin,tempMax,windSpeed,windDirection,feelsLike];
+           for (let i = 0; i < myWeatherTestArray.length; i++) {
+               console.log(myWeatherTestArray[i]);
+               
+           };
+           
+           /*
+            
             const weatherDescription = weatherData.weather[0].description;
             const icon = weatherData.weather[0].icon;
             const imageURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
@@ -40,7 +50,9 @@ app.post("/", function(req, res) {
             res.write("<h1> The weather is " + weatherDescription + "</h1>");
             res.write("<p>The Temperature in " + city +" is " + temp + "&#8457; </p>");//took out zip variable because not needed.
             res.write("<div><img src=" + imageURL +">"+"Feels like: "+ feelsLike+"</div>");
-            res.send();//need to send data to webpage.
+           
+           */
+          res.send(tempMin +",<br>"+ tempMax + ",<br>" + windSpeed +",<br>"+ windDirection + ",<br>" + feelsLike);//need to send data to webpage.
         });
     });
 })
